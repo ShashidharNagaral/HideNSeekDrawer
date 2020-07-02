@@ -1,9 +1,12 @@
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hidenseekdrawer/constants.dart';
+import 'package:hidenseekdrawer/widgets/list_item.dart';
 
 class HideNSeek extends StatefulWidget {
-  const HideNSeek({this.hideWidth = 60, this.seekWidth = 300});
+  const HideNSeek({this.hideWidth = 55, this.seekWidth = 300});
   final double hideWidth;
   final double seekWidth;
 
@@ -16,7 +19,13 @@ class _HideNSeekState extends State<HideNSeek> with TickerProviderStateMixin {
 
   AnimationController _controller;
   AnimationController _controller2;
-  Animation width, padding, avatar, topspace;
+  Animation width,
+      padding,
+      avatar,
+      topHeadSpace,
+      bottomHeadSpace,
+      rotate,
+      translate;
   bool isHided = true;
   @override
   void initState() {
@@ -25,18 +34,26 @@ class _HideNSeekState extends State<HideNSeek> with TickerProviderStateMixin {
     seekWidth = widget.seekWidth;
     _controller = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 700),
+      duration: Duration(milliseconds: 500),
     );
     _controller2 = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 500),
+      duration: Duration(milliseconds: 300),
     );
 
     width =
-        Tween<double>(begin: hideWidth, end: seekWidth).animate(_controller);
+        Tween<double>(begin: hideWidth, end: seekWidth).animate(CurvedAnimation(
+      parent: _controller,
+      curve: Curves.linear,
+      reverseCurve: Curves.linear,
+    ));
     padding = Tween<double>(begin: 9, end: 20).animate(_controller);
-    avatar = Tween<double>(begin: 20, end: 50).animate(_controller2);
-    topspace = Tween<double>(begin: 0, end: 20).animate(_controller2);
+    rotate = Tween<double>(begin: 0, end: pi * 2).animate(_controller);
+    avatar = Tween<double>(begin: 16, end: 30).animate(_controller2);
+    topHeadSpace = Tween<double>(begin: 0, end: 30).animate(_controller2);
+    bottomHeadSpace = Tween<double>(begin: 15, end: 50).animate(_controller2);
+    translate = Tween<Offset>(begin: Offset(0, 0), end: Offset(130, 0))
+        .animate(_controller2);
   }
 
   @override
@@ -80,38 +97,272 @@ class _HideNSeekState extends State<HideNSeek> with TickerProviderStateMixin {
           }
         },
         child: Container(
-          alignment: Alignment.center,
+//          alignment: Alignment.center,
           color: kGreyColor,
           width: width.value,
           height: height,
           child: Padding(
-            padding: EdgeInsets.only(left: padding.value, top: 9),
-            child: ListView(
+            padding: const EdgeInsets.only(left: 2),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                SizedBox(
-                  height: topspace.value,
-                ),
-                Row(
-                  children: <Widget>[
-                    CircleAvatar(
-                      radius: avatar.value,
-                      backgroundColor: kWhiteColor,
-                      backgroundImage: AssetImage('images/shashi.jpg'),
-                    ),
-                    Container(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text('Hello'),
-                          SizedBox(
-                            height: 25,
-                          ),
-                          Text('Shashidhar N.'),
-                        ],
+                Expanded(
+                  child: ListView(
+                    children: <Widget>[
+                      SizedBox(
+                        height: topHeadSpace.value,
                       ),
-                    )
-                  ],
+                      Padding(
+                        padding: EdgeInsets.only(left: padding.value, top: 10),
+                        child: Row(
+                          children: <Widget>[
+                            CircleAvatar(
+                              radius: avatar.value,
+                              backgroundColor: kWhiteColor,
+                              backgroundImage: AssetImage('images/shashi.jpg'),
+                            ),
+                            Visibility(
+                              visible: !isHided && seekWidth == width.value
+                                  ? true
+                                  : false,
+                              child: SizedBox(
+                                width: 10,
+                              ),
+                            ),
+                            Visibility(
+                              visible: !isHided && seekWidth == width.value
+                                  ? true
+                                  : false,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Text(
+                                    'Hello',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w300,
+                                      color: kWhiteColor,
+                                    ),
+                                  ),
+                                  Text(
+                                    'Shashidhar N',
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w400,
+                                      color: kWhiteColor,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Visibility(
+                        visible:
+                            !isHided && seekWidth == width.value ? true : false,
+                        child: SizedBox(
+                          height: 20,
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(left: padding.value),
+                        child: Visibility(
+                          visible: !isHided && seekWidth == width.value
+                              ? true
+                              : false,
+                          child: Row(
+                            children: <Widget>[
+                              Text(
+                                '234',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: kWhiteColor,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                              SizedBox(
+                                width: 5,
+                              ),
+                              Text(
+                                'Following',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: kGreyAccentColor,
+                                  fontWeight: FontWeight.w300,
+                                ),
+                              ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Text(
+                                '1,024',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: kWhiteColor,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                              SizedBox(
+                                width: 5,
+                              ),
+                              Text(
+                                'Followers',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: kGreyAccentColor,
+                                  fontWeight: FontWeight.w300,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Visibility(
+                        visible: isHided,
+                        child: SizedBox(
+                          height: 25,
+                        ),
+                      ),
+//fixme: translate and rotate not working
+//                      Transform.rotate(
+//                        origin: translate.value,
+//                        angle: rotate.value,
+//                        child: Padding(
+//                          padding: EdgeInsets.only(right: 4.5),
+//                          child: Icon(
+//                            Icons.more_horiz,
+//                            size: 30,
+//                            color: kWhiteColor,
+//                          ),
+//                        ),
+//                      ),
+                      Visibility(
+                        visible:
+                            !isHided && seekWidth == width.value ? true : false,
+                        child: Divider(
+                          color: Colors.white30,
+                          height: 0,
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(left: padding.value),
+                        child: Column(
+                          children: <Widget>[
+                            SizedBox(
+                              height: 25,
+                            ),
+                            CustomItem(
+                              isHided: isHided,
+                              seekWidth: seekWidth,
+                              animation: width,
+                              onTap: () {},
+                              icon: Icons.bookmark,
+                              title: 'Saved',
+                            ),
+                            SizedBox(
+                              height: 25,
+                            ),
+                            CustomItem(
+                              isHided: isHided,
+                              seekWidth: seekWidth,
+                              animation: width,
+                              onTap: () {},
+                              icon: Icons.history,
+                              title: 'History',
+                            ),
+                            SizedBox(
+                              height: 25,
+                            ),
+                            CustomItem(
+                              isHided: isHided,
+                              seekWidth: seekWidth,
+                              animation: width,
+                              onTap: () {},
+                              icon: Icons.person_add,
+                              title: 'Discover People',
+                            ),
+                            SizedBox(
+                              height: 25,
+                            ),
+                            CustomItem(
+                              isHided: isHided,
+                              seekWidth: seekWidth,
+                              animation: width,
+                              onTap: () {},
+                              icon: Icons.favorite_border,
+                              title: 'Favorites',
+                            ),
+                            SizedBox(
+                              height: 25,
+                            ),
+                          ],
+                        ),
+                      ),
+                      Visibility(
+                        visible:
+                            !isHided && seekWidth == width.value ? true : false,
+                        child: Divider(
+                          color: Colors.white30,
+                          height: 0,
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(left: padding.value),
+                        child: Column(
+                          children: <Widget>[
+                            SizedBox(
+                              height: 25,
+                            ),
+                            CustomItem(
+                              isHided: isHided,
+                              seekWidth: seekWidth,
+                              animation: width,
+                              onTap: () {},
+                              title: 'About',
+                            ),
+                            SizedBox(
+                              height: 25,
+                            ),
+                            CustomItem(
+                              isHided: isHided,
+                              seekWidth: seekWidth,
+                              animation: width,
+                              onTap: () {},
+                              title: 'Help Centre',
+                            ),
+                            SizedBox(
+                              height: 25,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
+                Visibility(
+                  visible: !isHided && seekWidth == width.value ? true : false,
+                  child: Divider(
+                    color: Colors.white30,
+                    height: 0,
+                  ),
+                ),
+                Padding(
+                  padding:
+                      EdgeInsets.only(left: padding.value, top: 10, bottom: 10),
+                  child: Padding(
+                      padding: isHided
+                          ? EdgeInsets.only(left: 0)
+                          : EdgeInsets.all(0),
+                      child: Transform.rotate(
+                        angle: rotate.value,
+                        child: Icon(
+                          Icons.settings,
+                          size: 30,
+                          color: kWhiteColor,
+                        ),
+                      )),
+                )
               ],
             ),
           ),
