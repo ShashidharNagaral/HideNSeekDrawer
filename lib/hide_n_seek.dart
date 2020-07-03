@@ -52,8 +52,9 @@ class _HideNSeekState extends State<HideNSeek> with TickerProviderStateMixin {
     avatar = Tween<double>(begin: 16, end: 30).animate(_controller2);
     topHeadSpace = Tween<double>(begin: 0, end: 30).animate(_controller2);
     bottomHeadSpace = Tween<double>(begin: 15, end: 50).animate(_controller2);
-    translate = Tween<Offset>(begin: Offset(0, 0), end: Offset(130, 0))
-        .animate(_controller2);
+    translate =
+        Tween<Offset>(begin: Offset(0, 0), end: Offset(seekWidth - 55, -100))
+            .animate(_controller);
   }
 
   @override
@@ -224,19 +225,24 @@ class _HideNSeekState extends State<HideNSeek> with TickerProviderStateMixin {
                           height: 25,
                         ),
                       ),
-//fixme: translate and rotate not working
-//                      Transform.rotate(
-//                        origin: translate.value,
-//                        angle: rotate.value,
-//                        child: Padding(
-//                          padding: EdgeInsets.only(right: 4.5),
-//                          child: Icon(
-//                            Icons.more_horiz,
-//                            size: 30,
-//                            color: kWhiteColor,
-//                          ),
-//                        ),
-//                      ),
+                      Padding(
+                        padding: EdgeInsets.only(left: padding.value),
+                        child: Row(
+                          children: <Widget>[
+                            Transform.translate(
+                              offset: translate.value,
+                              child: Transform.rotate(
+                                angle: rotate.value / 4,
+                                child: Icon(
+                                  Icons.more_horiz,
+                                  size: 30,
+                                  color: kWhiteColor,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                       Visibility(
                         visible:
                             !isHided && seekWidth == width.value ? true : false,
@@ -350,18 +356,14 @@ class _HideNSeekState extends State<HideNSeek> with TickerProviderStateMixin {
                 Padding(
                   padding:
                       EdgeInsets.only(left: padding.value, top: 10, bottom: 10),
-                  child: Padding(
-                      padding: isHided
-                          ? EdgeInsets.only(left: 0)
-                          : EdgeInsets.all(0),
-                      child: Transform.rotate(
-                        angle: rotate.value,
-                        child: Icon(
-                          Icons.settings,
-                          size: 30,
-                          color: kWhiteColor,
-                        ),
-                      )),
+                  child: Transform.rotate(
+                    angle: rotate.value,
+                    child: Icon(
+                      Icons.settings,
+                      size: 30,
+                      color: kWhiteColor,
+                    ),
+                  ),
                 )
               ],
             ),
