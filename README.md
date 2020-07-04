@@ -1,16 +1,27 @@
-# hidenseekdrawer
+# HideNSeek Animation Drawer
+An animating (**hidenseek**) drawer in flutter.
 
-A new Flutter application.
+## Features
+- This could be used both inside scaffold(drawer) and inside body as a hidden drawer.
 
-## Getting Started
+## Screenshots
+- Drawer inside body:
+<img height=600 width=300 src="https://github.com/ShashidharNagaral/HideNSeekDrawer/blob/master/screenshots/hidenseekdrawer-1.gif" hspace=100 />
 
-This project is a starting point for a Flutter application.
+- Drawer inside scaffold:
+<img height=600 width=300 src="https://github.com/ShashidharNagaral/HideNSeekDrawer/blob/master/screenshots/hidenseekdrawer-2.gif" hspace=100 />
 
-A few resources to get you started if this is your first Flutter project:
+[1.1]: https://image0.flaticon.com/icons/png/32/61/61109.png (linkedin icon)
+[2.1]: https://i.imgur.com/FTfZyuk.png (instagram icon)
+[3.1]: http://i.imgur.com/0o48UoR.png (github icon)
+[4.1]: http://i.imgur.com/tXSoThF.png (twitter icon)
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+[1]: https://www.linkedin.com/in/shashnagaral/
+[2]: https://www.instagram.com/shashnagaral/
+[3]: https://github.com/ShashidharNagaral
+[4]: https://twitter.com/shashnagaral
+## Follow me on
+[![linkedin][1.1]][1] &nbsp;
+[![instagram][2.1]][2] &nbsp;
+[![github][3.1]][3] &nbsp;
+[![twitter][4.1]][4]
