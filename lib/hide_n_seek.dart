@@ -1,12 +1,12 @@
 import 'dart:math';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hidenseekdrawer/constants.dart';
+import 'package:hidenseekdrawer/screens/new_page.dart';
 import 'package:hidenseekdrawer/widgets/list_item.dart';
 
 class HideNSeek extends StatefulWidget {
-  const HideNSeek({this.hideWidth = 55, this.seekWidth = 300});
+  const HideNSeek({this.hideWidth, this.seekWidth});
   final double hideWidth;
   final double seekWidth;
 
@@ -53,7 +53,7 @@ class _HideNSeekState extends State<HideNSeek> with TickerProviderStateMixin {
     topHeadSpace = Tween<double>(begin: 0, end: 30).animate(_controller2);
     bottomHeadSpace = Tween<double>(begin: 15, end: 50).animate(_controller2);
     translate =
-        Tween<Offset>(begin: Offset(0, 0), end: Offset(seekWidth - 55, -100))
+        Tween<Offset>(begin: Offset(0, 0), end: Offset(seekWidth - 55, -105))
             .animate(_controller);
   }
 
@@ -73,27 +73,29 @@ class _HideNSeekState extends State<HideNSeek> with TickerProviderStateMixin {
           dragUpdateDetails = detail;
         },
         onHorizontalDragEnd: (detail) {
-          double horizontalSwipe = dragUpdateDetails.globalPosition.dx -
-              dragStartDetails.globalPosition.dx;
-          if (horizontalSwipe < 0) horizontalSwipe = -horizontalSwipe;
-          double velocity = detail.primaryVelocity;
-          if (horizontalSwipe > 10) {
-            if (velocity > 50 && width.value == hideWidth) {
-              //LtoR swipe
-              setState(() {
+          if (dragUpdateDetails != null && dragStartDetails != null) {
+            double horizontalSwipe = dragUpdateDetails.globalPosition.dx -
+                dragStartDetails.globalPosition.dx;
+            if (horizontalSwipe < 0) horizontalSwipe = -horizontalSwipe;
+            double velocity = detail.primaryVelocity;
+            if (horizontalSwipe > 10) {
+              if (velocity > 50 && width.value == hideWidth) {
+                //LtoR swipe
+//                setState(() {
                 isHided = false;
-              });
-              _controller.forward();
-              _controller2.forward();
-              print('L to R swipe');
-            } else if (velocity < -50 && width.value == seekWidth) {
-              //RtoL swipe
-              setState(() {
+//                });
+                _controller.forward();
+                _controller2.forward();
+                print('L to R swipe');
+              } else if (velocity < -50 && width.value == seekWidth) {
+                //RtoL swipe
+//                setState(() {
                 isHided = true;
-              });
-              _controller.reverse();
-              _controller2.reverse();
-              print('R to L swipe');
+//                });
+                _controller.reverse();
+                _controller2.reverse();
+                print('R to L swipe');
+              }
             }
           }
         },
@@ -117,10 +119,29 @@ class _HideNSeekState extends State<HideNSeek> with TickerProviderStateMixin {
                         padding: EdgeInsets.only(left: padding.value, top: 10),
                         child: Row(
                           children: <Widget>[
-                            CircleAvatar(
-                              radius: avatar.value,
-                              backgroundColor: kWhiteColor,
-                              backgroundImage: AssetImage('images/shashi.jpg'),
+                            GestureDetector(
+                              onTap: () {
+                                if (!isHided) {
+                                  _controller2.reverse();
+                                  _controller.reverse();
+                                }
+
+                                ///use only when drawer is used in scaffold
+//                                Navigator.pop(context);
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        NewPage(title: 'Profile Page'),
+                                  ),
+                                );
+                              },
+                              child: CircleAvatar(
+                                radius: avatar.value,
+                                backgroundColor: kWhiteColor,
+                                backgroundImage:
+                                    AssetImage('images/shashi.jpg'),
+                              ),
                             ),
                             Visibility(
                               visible: !isHided && seekWidth == width.value
@@ -220,27 +241,9 @@ class _HideNSeekState extends State<HideNSeek> with TickerProviderStateMixin {
                         ),
                       ),
                       Visibility(
-                        visible: isHided,
+                        visible: !isHided,
                         child: SizedBox(
                           height: 25,
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(left: padding.value),
-                        child: Row(
-                          children: <Widget>[
-                            Transform.translate(
-                              offset: translate.value,
-                              child: Transform.rotate(
-                                angle: rotate.value / 4,
-                                child: Icon(
-                                  Icons.more_horiz,
-                                  size: 30,
-                                  color: kWhiteColor,
-                                ),
-                              ),
-                            ),
-                          ],
                         ),
                       ),
                       Visibility(
@@ -262,8 +265,21 @@ class _HideNSeekState extends State<HideNSeek> with TickerProviderStateMixin {
                               isHided: isHided,
                               seekWidth: seekWidth,
                               animation: width,
-                              onTap: () {},
-                              icon: Icons.bookmark,
+                              onTap: () {
+                                if (!isHided) {
+                                  _controller2.reverse();
+                                  _controller.reverse();
+                                }
+//                                Navigator.pop(context);
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        NewPage(title: 'Saved Page'),
+                                  ),
+                                );
+                              },
+                              icon: Icons.bookmark_border,
                               title: 'Saved',
                             ),
                             SizedBox(
@@ -273,7 +289,20 @@ class _HideNSeekState extends State<HideNSeek> with TickerProviderStateMixin {
                               isHided: isHided,
                               seekWidth: seekWidth,
                               animation: width,
-                              onTap: () {},
+                              onTap: () {
+                                if (!isHided) {
+                                  _controller2.reverse();
+                                  _controller.reverse();
+                                }
+//                                Navigator.pop(context);
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        NewPage(title: 'History Page'),
+                                  ),
+                                );
+                              },
                               icon: Icons.history,
                               title: 'History',
                             ),
@@ -284,7 +313,20 @@ class _HideNSeekState extends State<HideNSeek> with TickerProviderStateMixin {
                               isHided: isHided,
                               seekWidth: seekWidth,
                               animation: width,
-                              onTap: () {},
+                              onTap: () {
+                                if (!isHided) {
+                                  _controller2.reverse();
+                                  _controller.reverse();
+                                }
+//                                Navigator.pop(context);
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        NewPage(title: 'Find Friends'),
+                                  ),
+                                );
+                              },
                               icon: Icons.person_add,
                               title: 'Discover People',
                             ),
@@ -295,7 +337,20 @@ class _HideNSeekState extends State<HideNSeek> with TickerProviderStateMixin {
                               isHided: isHided,
                               seekWidth: seekWidth,
                               animation: width,
-                              onTap: () {},
+                              onTap: () {
+                                if (!isHided) {
+                                  _controller2.reverse();
+                                  _controller.reverse();
+                                }
+//                                Navigator.pop(context);
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        NewPage(title: 'Favorites Page'),
+                                  ),
+                                );
+                              },
                               icon: Icons.favorite_border,
                               title: 'Favorites',
                             ),
@@ -324,7 +379,20 @@ class _HideNSeekState extends State<HideNSeek> with TickerProviderStateMixin {
                               isHided: isHided,
                               seekWidth: seekWidth,
                               animation: width,
-                              onTap: () {},
+                              onTap: () {
+                                if (!isHided) {
+                                  _controller2.reverse();
+                                  _controller.reverse();
+                                }
+//                                Navigator.pop(context);
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        NewPage(title: 'About Page'),
+                                  ),
+                                );
+                              },
                               title: 'About',
                             ),
                             SizedBox(
@@ -334,7 +402,20 @@ class _HideNSeekState extends State<HideNSeek> with TickerProviderStateMixin {
                               isHided: isHided,
                               seekWidth: seekWidth,
                               animation: width,
-                              onTap: () {},
+                              onTap: () {
+                                if (!isHided) {
+                                  _controller2.reverse();
+                                  _controller.reverse();
+                                }
+//                                Navigator.pop(context);
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        NewPage(title: 'Help Page'),
+                                  ),
+                                );
+                              },
                               title: 'Help Centre',
                             ),
                             SizedBox(
@@ -353,15 +434,30 @@ class _HideNSeekState extends State<HideNSeek> with TickerProviderStateMixin {
                     height: 0,
                   ),
                 ),
-                Padding(
-                  padding:
-                      EdgeInsets.only(left: padding.value, top: 10, bottom: 10),
-                  child: Transform.rotate(
-                    angle: rotate.value,
-                    child: Icon(
-                      Icons.settings,
-                      size: 30,
-                      color: kWhiteColor,
+                GestureDetector(
+                  onTap: () {
+                    if (!isHided) {
+                      _controller2.reverse();
+                      _controller.reverse();
+                    }
+//                    Navigator.pop(context);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => NewPage(title: 'Settings Page'),
+                      ),
+                    );
+                  },
+                  child: Padding(
+                    padding: EdgeInsets.only(
+                        left: padding.value, top: 10, bottom: 10, right: 15),
+                    child: Transform.rotate(
+                      angle: rotate.value,
+                      child: Icon(
+                        Icons.settings,
+                        size: 30,
+                        color: kWhiteColor,
+                      ),
                     ),
                   ),
                 )
@@ -375,6 +471,7 @@ class _HideNSeekState extends State<HideNSeek> with TickerProviderStateMixin {
 
   @override
   void dispose() {
+    print('disposed');
     _controller.dispose();
     _controller2.dispose();
     super.dispose();

@@ -20,19 +20,16 @@ class CustomItem extends StatelessWidget {
   final IconData icon;
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: isHided ? EdgeInsets.only(left: 0) : EdgeInsets.all(0),
+    return GestureDetector(
+      onTap: onTap,
       child: Row(
         children: <Widget>[
           Visibility(
             visible: icon == null ? false : true,
-            child: GestureDetector(
-              onTap: onTap,
-              child: Icon(
-                icon,
-                color: kWhiteColor,
-                size: 30,
-              ),
+            child: Icon(
+              icon,
+              color: kWhiteColor,
+              size: 30,
             ),
           ),
           Visibility(
